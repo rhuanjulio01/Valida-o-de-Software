@@ -1,10 +1,3 @@
-"""
-Testes Automatizados para o Sistema de Reserva de Salas de Estudo
-
-Este módulo contém os testes unitários para o sistema de reserva de salas.
-Utiliza pytest para execução e cobertura de código.
-"""
-
 import pytest
 import sistema
 
@@ -145,6 +138,38 @@ def test_consultar_historico():
 
 
 # Teste 7: Tentativa de Reserva com Aluno Não Cadastrado
+def test_cancelar_reserva_existente():
+    """
+    Testa o cancelamento de uma reserva existente.
+    
+    Verifica se a reserva e removida do historico e se a funcao retorna True.
+    """
+    sistema.cadastrar_aluno("Marcos Lima")
+    sistema.realizar_reserva("Marcos Lima", "Sala 1", "16:00")
+
+    resultado = sistema.cancelar_reserva("Marcos Lima", "Sala 1", "16:00")
+
+    assert resultado is True
+    assert sistema.consultar_historico() == []
+
+
+def test_cancelar_reserva_inexistente():
+    """
+    Testa a tentativa de cancelar uma reserva que nao existe.
+    
+    Verifica se o sistema retorna False e mantem o historico sem alteracao.
+    """
+    sistema.cadastrar_aluno("Paula Mendes")
+    sistema.realizar_reserva("Paula Mendes", "Sala 2", "17:00")
+
+    resultado = sistema.cancelar_reserva("Paula Mendes", "Sala 3", "17:00")
+
+    assert resultado is False
+    historico = sistema.consultar_historico()
+    assert len(historico) == 1
+    assert historico[0]["sala"] == "Sala 2"
+
+
 def test_reserva_aluno_nao_cadastrado():
     """
     Testa a tentativa de fazer uma reserva com um aluno não cadastrado.

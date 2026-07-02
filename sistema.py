@@ -1,12 +1,3 @@
-"""
-Sistema de Reserva de Salas de Estudo
-
-Este módulo implementa um sistema para gerenciar reservas de salas de estudo.
-Permite cadastro de alunos, consulta de salas, realização de reservas e
-consulta de histórico de reservas.
-"""
-
-# Dados armazenados em memória
 alunos = []  # Lista de nomes de alunos cadastrados
 reservas = []  # Lista de reservas realizadas
 salas_disponiveis = ["Sala 1", "Sala 2", "Sala 3"]  # Salas disponíveis no sistema
@@ -16,14 +7,6 @@ def cadastrar_aluno(nome):
     """
     Cadastra um novo aluno no sistema.
     
-    Args:
-        nome (str): Nome do aluno a ser cadastrado
-        
-    Returns:
-        bool: True se cadastrado com sucesso, False se aluno já existe
-        
-    Raises:
-        ValueError: Se o nome estiver vazio ou for None
     """
     if not isinstance(nome, str):
         raise ValueError("Nome deve ser uma string não vazia")
@@ -36,7 +19,7 @@ def cadastrar_aluno(nome):
     if nome in alunos:
         return False
     
-    alunos.append(nome)
+    alunos.append(nome) 
     return True
 
 
@@ -73,7 +56,7 @@ def realizar_reserva(aluno, sala, horario):
     
     if sala not in salas_disponiveis:
         raise ValueError(f"Sala '{sala}' não existe no sistema")
-    
+       
     if not horario or not isinstance(horario, str):
         raise ValueError("Horário deve ser uma string válida")
     
@@ -100,6 +83,30 @@ def consultar_historico():
         list: Lista de todas as reservas realizadas (dicionários com aluno, sala e horario)
     """
     return reservas.copy()
+
+
+def cancelar_reserva(aluno, sala, horario):
+    """
+    Cancela uma reserva existente.
+    
+    Args:
+        aluno (str): Nome do aluno que fez a reserva
+        sala (str): Nome da sala reservada
+        horario (str): Horario da reserva
+        
+    Returns:
+        bool: True se a reserva foi cancelada, False se nao foi encontrada
+    """
+    for reserva in reservas:
+        if (
+            reserva["aluno"] == aluno
+            and reserva["sala"] == sala
+            and reserva["horario"] == horario
+        ):
+            reservas.remove(reserva)
+            return True
+
+    return False
 
 
 def limpar_dados():
